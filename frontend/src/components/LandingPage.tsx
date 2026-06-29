@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Microscope, ArrowRight, Layers, ShieldCheck, Cuboid } from 'lucide-react';
+import { ArrowRight, Layers, ShieldCheck, Cuboid } from 'lucide-react';
 
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
