@@ -1,4 +1,4 @@
-# BioFOld Project Report
+# BioFold Project Report
 
 **Submission for H.O.L.M.E.S. Initiative Competition**
 
