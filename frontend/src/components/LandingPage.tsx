@@ -16,10 +16,6 @@ export const LandingPage: React.FC = () => {
         </div>
 
         <div className="max-w-7xl mx-auto relative z-10 flex flex-col items-start space-y-8">
-          <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-3 py-1 rounded-sm border border-white/20 text-xs font-bold tracking-widest uppercase">
-            <Microscope className="w-4 h-4 text-alpha-accent" />
-            <span>IEEE ICADHI 2026</span>
-          </div>
           
           <h1 className="text-5xl md:text-6xl font-semibold tracking-wide text-white leading-tight">
             BioFOld: Multi-Agent <br className="hidden md:block"/>
