@@ -6,9 +6,9 @@ import { Generator } from './components/Generator';
 function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen flex flex-col font-sans bg-alpha-bg bg-matrix text-alpha-dark">
+      <div className="min-h-screen flex flex-col font-sans bg-slate-950 bg-matrix text-gray-100">
         {/* Slim Minimalist Header */}
-        <header className="bg-alpha-dark border-b border-alpha-border sticky top-0 z-50">
+        <header className="bg-slate-900/50 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-14">
               <Link to="/" className="flex items-center space-x-3 group">
@@ -45,7 +45,7 @@ function App() {
         </div>
 
         {/* Technical Footer */}
-        <footer className="bg-alpha-dark border-t border-alpha-border mt-auto">
+        <footer className="bg-slate-900/50 border-t border-white/10 mt-auto">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row justify-between items-center text-xs tracking-wider uppercase font-medium text-gray-400 space-y-4 md:space-y-0">
             <div className="flex flex-col space-y-2 text-center md:text-left">
               <p>&copy; 2026 H.O.L.M.E.S. Initiative. All rights reserved.</p>

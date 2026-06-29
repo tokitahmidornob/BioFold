@@ -26,12 +26,12 @@ const BiologicalDataStream: React.FC = () => {
   }, []);
 
   return (
-    <div className="pt-6 border-t border-alpha-border animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <h3 className="text-xs font-bold text-alpha-dark uppercase tracking-wider mb-2 flex items-center space-x-2">
-        <Loader2 className="w-3 h-3 animate-spin text-alpha-accent" />
+    <div className="pt-6 border-t border-white/10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <h3 className="text-xs font-bold text-gray-100 uppercase tracking-wider mb-2 flex items-center space-x-2">
+        <Loader2 className="w-3 h-3 animate-spin text-cyan-400" />
         <span>Decoding Sequence Stream...</span>
       </h3>
-      <div className="bg-alpha-dark p-4 rounded-sm font-mono text-sm text-alpha-success break-all shadow-inner border border-alpha-border tracking-widest leading-relaxed">
+      <div className="bg-black/20 p-4 rounded-sm font-mono text-sm text-emerald-400 break-all shadow-inner border border-white/10 tracking-widest leading-relaxed">
         {stream}
       </div>
     </div>
@@ -150,12 +150,12 @@ export const PipelineDashboard: React.FC<PipelineDashboardProps> = ({ isActive, 
   if (!isActive) return null;
 
   return (
-    <div className="bg-white/80 backdrop-blur-sm rounded-sm border border-gray-300 shadow-sm p-5 space-y-6">
+    <div className="bg-white/5 backdrop-blur-md rounded-sm border border-white/10 shadow-sm p-5 space-y-6">
       <div className="space-y-5">
-        <h2 className="text-xs font-bold text-alpha-dark tracking-wider uppercase border-b border-gray-200 pb-3">Pipeline Execution Status</h2>
+        <h2 className="text-xs font-bold text-gray-100 tracking-wider uppercase border-b border-white/10 pb-3">Pipeline Execution Status</h2>
         
         <div className="relative pl-2">
-          <div className="absolute left-3.5 top-5 bottom-5 w-[1px] bg-gray-200"></div>
+          <div className="absolute left-3.5 top-5 bottom-5 w-[1px] bg-white/10"></div>
           <div className="space-y-5 relative">
             {stages.map((stage) => (
               <div key={stage.id} className="flex items-start space-x-4">
@@ -163,9 +163,9 @@ export const PipelineDashboard: React.FC<PipelineDashboardProps> = ({ isActive, 
                   <div className={cn(
                     "w-2.5 h-2.5 rounded-full transition-all duration-500",
                     stage.status === 'completed' ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" :
-                    stage.status === 'in_progress' ? "bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)] animate-pulse" :
+                    stage.status === 'in_progress' ? "bg-cyan-500 shadow-[0_0_8px_rgba(6,182,212,0.8)] animate-pulse" :
                     stage.status === 'error' ? "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)] animate-pulse" :
-                    "bg-gray-300"
+                    "bg-white/20"
                   )} />
                 </div>
                 
@@ -173,7 +173,7 @@ export const PipelineDashboard: React.FC<PipelineDashboardProps> = ({ isActive, 
                   <div className="flex items-center justify-between">
                     <h3 className={cn(
                       "font-semibold text-sm transition-colors",
-                      stage.status === 'pending' ? "text-gray-400" : "text-alpha-dark"
+                      stage.status === 'pending' ? "text-gray-500" : "text-gray-100"
                     )}>
                       {stage.name}
                     </h3>
@@ -194,26 +194,26 @@ export const PipelineDashboard: React.FC<PipelineDashboardProps> = ({ isActive, 
       )}
 
       {sequence && (
-        <div className="pt-6 border-t border-alpha-border animate-in fade-in slide-in-from-bottom-4 duration-500">
-           <h3 className="text-xs font-bold text-alpha-dark uppercase tracking-wider mb-2">Generated Sequence</h3>
-           <div className="bg-alpha-bg p-4 rounded-sm break-all font-mono text-sm text-alpha-dark border border-alpha-border">
+        <div className="pt-6 border-t border-white/10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+           <h3 className="text-xs font-bold text-gray-100 uppercase tracking-wider mb-2">Generated Sequence</h3>
+           <div className="bg-black/20 p-4 rounded-sm break-all font-mono text-sm text-gray-100 border border-white/10">
              {sequence}
            </div>
         </div>
       )}
 
       {isSafe !== null && (
-        <div className="pt-6 border-t border-alpha-border animate-in fade-in slide-in-from-bottom-4 duration-500">
-           <h3 className="text-xs font-bold text-alpha-dark uppercase tracking-wider mb-2">Biosecurity Clearance</h3>
-           <div className={cn("p-4 rounded-sm font-mono text-sm", isSafe ? "bg-alpha-success/10 text-alpha-success border border-alpha-success" : "bg-red-500/10 text-red-600 border border-red-500")}>
+        <div className="pt-6 border-t border-white/10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+           <h3 className="text-xs font-bold text-gray-100 uppercase tracking-wider mb-2">Biosecurity Clearance</h3>
+           <div className={cn("p-4 rounded-sm font-mono text-sm", isSafe ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/50" : "bg-red-500/10 text-red-400 border border-red-500/50")}>
              {isSafe ? "Passed" : "Failed"}: {guardrailMessage}
            </div>
         </div>
       )}
 
       {pipelineComplete && pdbData && (
-        <div className="pt-6 border-t border-alpha-border animate-in fade-in slide-in-from-bottom-4 duration-700">
-          <h3 className="text-xs font-bold text-alpha-dark uppercase tracking-wider mb-4">Predicted Structure (ESMFold2)</h3>
+        <div className="pt-6 border-t border-white/10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <h3 className="text-xs font-bold text-gray-100 uppercase tracking-wider mb-4">Predicted Structure (ESMFold2)</h3>
           <MolecularViewer pdbData={pdbData} />
         </div>
       )}
