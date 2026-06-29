@@ -22,3 +22,6 @@ This throughput unlocks rapid in silico discovery pipelines for:
 - **Targeted Therapeutics:** Generating neutralizing binders against emergent viral pathogen receptors with a reduced time-to-market.
 
 By replacing the initial months of wet-lab trial and error with hours of distributed AI inference, BioFOld redefines the velocity of biological engineering.
+
+
+

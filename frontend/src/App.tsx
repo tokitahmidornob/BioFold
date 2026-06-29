@@ -1,78 +1,65 @@
-import { useState } from 'react';
-import { TargetConditioning } from './components/TargetConditioning';
-import { PipelineDashboard } from './components/PipelineDashboard';
-import { Microscope, GitBranch, Shield, Settings } from 'lucide-react';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { Microscope, GitBranch, Shield, Settings, Code } from 'lucide-react';
+import { LandingPage } from './components/LandingPage';
+import { Generator } from './components/Generator';
 
 function App() {
-  const [pipelineActive, setPipelineActive] = useState(false);
-  const [isPipelineLoading, setIsPipelineLoading] = useState(false);
-  const [targetPrompt, setTargetPrompt] = useState('');
-
   return (
-    <div className="min-h-screen flex flex-col font-sans bg-alpha-bg text-alpha-dark">
-      <header className="bg-alpha-dark border-b border-alpha-border sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-3">
-              <div className="bg-alpha-accent p-2 rounded-sm">
-                <Microscope className="w-6 h-6 text-white" />
-              </div>
-              <h1 className="text-xl font-bold text-white tracking-widest uppercase">Bio-LLM <span className="text-alpha-accent font-normal">Sequence Generator</span></h1>
+    <BrowserRouter>
+      <div className="min-h-screen flex flex-col font-sans bg-alpha-bg text-alpha-dark">
+        {/* Slim Minimalist Header */}
+        <header className="bg-alpha-dark border-b border-alpha-border sticky top-0 z-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center h-14">
+              <Link to="/" className="flex items-center space-x-3 group">
+                <div className="bg-alpha-accent p-1.5 rounded-sm">
+                  <Microscope className="w-5 h-5 text-white" />
+                </div>
+                <h1 className="text-lg font-bold text-white tracking-widest uppercase group-hover:text-gray-200 transition-colors">
+                  BioFOld
+                </h1>
+              </Link>
+              
+              <nav className="flex space-x-6 items-center">
+                <Link to="/" className="text-gray-300 hover:text-white flex items-center space-x-2 text-xs font-bold tracking-wider uppercase transition-colors">
+                  <span>Home</span>
+                </Link>
+                <a href="#" className="text-gray-300 hover:text-white flex items-center space-x-2 text-xs font-bold tracking-wider uppercase transition-colors">
+                  <span>About</span>
+                </a>
+                <a href="https://github.com/holmes-initiative/biofold" target="_blank" rel="noopener noreferrer" className="bg-white/10 hover:bg-white/20 text-white p-1.5 rounded-sm transition-colors border border-white/10 flex items-center space-x-2">
+                  <Code className="w-4 h-4" />
+                  <span className="text-xs font-bold tracking-wider uppercase px-1">GitHub</span>
+                </a>
+              </nav>
             </div>
-            <nav className="flex space-x-6">
-              <a href="#" className="text-gray-300 hover:text-white flex items-center space-x-2 text-xs font-semibold tracking-wider uppercase transition-colors">
-                <GitBranch className="w-4 h-4" />
-                <span>Models</span>
-              </a>
-              <a href="#" className="text-gray-300 hover:text-white flex items-center space-x-2 text-xs font-semibold tracking-wider uppercase transition-colors">
-                <Shield className="w-4 h-4" />
-                <span>Security</span>
-              </a>
-              <a href="#" className="text-gray-300 hover:text-white flex items-center space-x-2 text-xs font-semibold tracking-wider uppercase transition-colors">
-                <Settings className="w-4 h-4" />
-                <span>Settings</span>
-              </a>
-            </nav>
           </div>
-        </div>
-      </header>
-
-      <main className="flex-1 max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10 space-y-10">
-        <header className="space-y-2">
-          <h2 className="text-3xl font-bold text-alpha-dark tracking-wide uppercase">Workspace Initialization</h2>
-          <p className="text-alpha-dark/70 text-lg">Define target constraints and execute the multi-agent generation pipeline.</p>
         </header>
 
-        <section>
-          <TargetConditioning 
-            isLoading={isPipelineLoading}
-            onStartPipeline={(prompt) => {
-              setTargetPrompt(prompt);
-              setPipelineActive(true);
-              setIsPipelineLoading(true);
-            }} 
-          />
-        </section>
-
-        <section>
-          <PipelineDashboard 
-            isActive={pipelineActive} 
-            targetPrompt={targetPrompt} 
-            onComplete={() => setIsPipelineLoading(false)}
-          />
-        </section>
-      </main>
-
-      <footer className="bg-alpha-dark border-t border-alpha-border mt-auto">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center text-xs tracking-wider uppercase font-medium text-gray-400">
-          <p>&copy; 2026 DeepMind Antigravity Labs. All rights reserved.</p>
-          <div className="flex space-x-4">
-            <span>v1.0.0</span>
-            <span>Status: Operational</span>
-          </div>
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col">
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/generate" element={<Generator />} />
+          </Routes>
         </div>
-      </footer>
-    </div>
+
+        {/* Technical Footer */}
+        <footer className="bg-alpha-dark border-t border-alpha-border mt-auto">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row justify-between items-center text-xs tracking-wider uppercase font-medium text-gray-400 space-y-4 md:space-y-0">
+            <div className="flex flex-col space-y-2 text-center md:text-left">
+              <p>&copy; 2026 H.O.L.M.E.S. Initiative. All rights reserved.</p>
+              <p className="text-gray-500 max-w-xl">Disclaimer: This tool is for research purposes only. Generated sequences must be validated in vitro before any practical application.</p>
+            </div>
+            <div className="flex space-x-6">
+              <span className="flex items-center space-x-1"><Shield className="w-3 h-3"/> <span>Biosecurity Active</span></span>
+              <span>v2.0.0</span>
+              <span className="text-alpha-success">Status: Operational</span>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </BrowserRouter>
   );
 }
 
