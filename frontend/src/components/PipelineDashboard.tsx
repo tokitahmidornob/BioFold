@@ -96,7 +96,7 @@ export const PipelineDashboard: React.FC<PipelineDashboardProps> = ({ isActive, 
       ]);
 
       try {
-        const response = await fetch('http://localhost:8000/api/v1/design-protein', {
+        const response = await fetch('https://tokitahmidornob-biofold-engine.hf.space/api/v1/design-protein', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ target_prompt: targetPrompt })
