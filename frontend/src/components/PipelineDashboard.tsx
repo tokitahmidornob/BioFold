@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CheckCircle2, Loader2, ShieldCheck, Dna, Cuboid } from 'lucide-react';
+import { Loader2, ShieldCheck, Dna, Cuboid } from 'lucide-react';
 import { MolecularViewer } from './MolecularViewer';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
