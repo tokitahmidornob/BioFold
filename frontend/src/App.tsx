@@ -6,7 +6,7 @@ import { Generator } from './components/Generator';
 function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen flex flex-col font-sans bg-alpha-bg text-alpha-dark">
+      <div className="min-h-screen flex flex-col font-sans bg-alpha-bg bg-matrix text-alpha-dark">
         {/* Slim Minimalist Header */}
         <header className="bg-alpha-dark border-b border-alpha-border sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -21,7 +21,7 @@ export const LandingPage: React.FC = () => {
             <span>IEEE ICADHI 2026</span>
           </div>
           
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-white leading-tight">
+          <h1 className="text-5xl md:text-6xl font-semibold tracking-wide text-white leading-tight">
             BioFOld: Multi-Agent <br className="hidden md:block"/>
             <span className="text-alpha-accent">Sequence Generation</span>
           </h1>
@@ -33,7 +33,7 @@ export const LandingPage: React.FC = () => {
           <div className="pt-4">
             <button 
               onClick={() => navigate('/generate')}
-              className="bg-alpha-accent hover:bg-blue-600 text-white font-bold tracking-widest uppercase py-4 px-8 rounded-sm shadow-lg transition-all flex items-center space-x-3 group"
+              className="bg-transparent border border-white/50 hover:bg-white/10 hover:border-white text-white font-bold tracking-widest uppercase py-3 px-8 rounded-sm transition-all flex items-center space-x-3 group"
             >
               <span>Launch Sequence Generator</span>
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

@@ -11,4 +11,12 @@
 
 body {
   @apply bg-alpha-bg text-alpha-dark antialiased;
+  font-family: 'Inter', 'Roboto', system-ui, sans-serif;
+  font-size: 14px;
+}
+
+/* Subtle Dotted Matrix Background for Research Aesthetic */
+.bg-matrix {
+  background-image: radial-gradient(#d1d5db 1px, transparent 1px);
+  background-size: 20px 20px;
 }

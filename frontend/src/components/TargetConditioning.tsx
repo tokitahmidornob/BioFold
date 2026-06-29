@@ -44,13 +44,13 @@ export const TargetConditioning: React.FC<TargetConditioningProps> = ({ onStartP
   };
 
   return (
-    <div className="bg-alpha-card rounded-sm border border-alpha-border p-6 space-y-6">
-      <div className="flex items-center space-x-3 border-b border-alpha-border pb-4">
-        <Activity className="text-alpha-accent w-5 h-5" />
-        <h2 className="text-sm font-bold text-alpha-dark tracking-wider uppercase">Target Conditioning</h2>
+    <div className="bg-white/80 backdrop-blur-sm rounded-sm border border-gray-300 shadow-sm p-5 space-y-5">
+      <div className="flex items-center space-x-3 border-b border-gray-200 pb-3">
+        <Activity className="text-alpha-accent w-4 h-4" />
+        <h2 className="text-xs font-bold text-alpha-dark tracking-wider uppercase">Target Conditioning</h2>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 gap-6">
         <div className="space-y-4">
           <label className="block text-xs font-bold text-alpha-dark uppercase tracking-wider">Structural Target Upload (.pdb)</label>
           <div 

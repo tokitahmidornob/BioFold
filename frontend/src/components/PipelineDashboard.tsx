@@ -150,33 +150,33 @@ export const PipelineDashboard: React.FC<PipelineDashboardProps> = ({ isActive, 
   if (!isActive) return null;
 
   return (
-    <div className="bg-alpha-card rounded-sm border border-alpha-border p-6 space-y-8">
-      <div className="space-y-6">
-        <h2 className="text-sm font-bold text-alpha-dark tracking-wider uppercase">Pipeline Execution Status</h2>
+    <div className="bg-white/80 backdrop-blur-sm rounded-sm border border-gray-300 shadow-sm p-5 space-y-6">
+      <div className="space-y-5">
+        <h2 className="text-xs font-bold text-alpha-dark tracking-wider uppercase border-b border-gray-200 pb-3">Pipeline Execution Status</h2>
         
-        <div className="relative">
-          <div className="absolute left-6 top-8 bottom-8 w-0.5 bg-alpha-border"></div>
-          <div className="space-y-6 relative">
+        <div className="relative pl-2">
+          <div className="absolute left-3.5 top-5 bottom-5 w-[1px] bg-gray-200"></div>
+          <div className="space-y-5 relative">
             {stages.map((stage) => (
               <div key={stage.id} className="flex items-start space-x-4">
-                <div className={cn(
-                  "relative z-10 flex items-center justify-center w-12 h-12 rounded-full border-2 bg-white transition-colors duration-500",
-                  stage.status === 'completed' ? "border-alpha-success text-alpha-success" :
-                  stage.status === 'in_progress' ? "border-alpha-accent text-alpha-accent" :
-                  "border-alpha-border text-gray-400"
-                )}>
-                  {stage.status === 'in_progress' ? <Loader2 className="w-5 h-5 animate-spin" /> : stage.icon}
+                <div className="relative mt-1.5 flex items-center justify-center w-3 h-3 z-10">
+                  <div className={cn(
+                    "w-2.5 h-2.5 rounded-full transition-all duration-500",
+                    stage.status === 'completed' ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" :
+                    stage.status === 'in_progress' ? "bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)] animate-pulse" :
+                    stage.status === 'error' ? "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)] animate-pulse" :
+                    "bg-gray-300"
+                  )} />
                 </div>
                 
-                <div className="pt-2 flex-1">
+                <div className="flex-1">
                   <div className="flex items-center justify-between">
                     <h3 className={cn(
-                      "font-semibold text-lg transition-colors",
+                      "font-semibold text-sm transition-colors",
                       stage.status === 'pending' ? "text-gray-400" : "text-alpha-dark"
                     )}>
                       {stage.name}
                     </h3>
-                    {stage.status === 'completed' && <CheckCircle2 className="w-5 h-5 text-alpha-success" />}
                   </div>
                   <p className={cn(
                     "text-sm mt-1 transition-colors",
