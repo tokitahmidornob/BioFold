@@ -82,6 +82,7 @@ export const PipelineDashboard: React.FC<PipelineDashboardProps> = ({ isActive, 
   const [pdbData, setPdbData] = useState<string | null>(null);
   const [isSafe, setIsSafe] = useState<boolean | null>(null);
   const [guardrailMessage, setGuardrailMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isActive || !targetPrompt) return;
@@ -105,6 +106,10 @@ export const PipelineDashboard: React.FC<PipelineDashboardProps> = ({ isActive, 
         const data = await response.json();
         
         if (!isMounted) return;
+        
+        if (!response.ok) {
+           throw new Error(data.detail || 'API request failed');
+        }
 
         setSequence(data.sequence);
         setIsSafe(data.is_safe);
@@ -130,10 +135,11 @@ export const PipelineDashboard: React.FC<PipelineDashboardProps> = ({ isActive, 
           ]);
           setPipelineComplete(true);
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error(err);
         if (isMounted) {
             setStages(prev => prev.map(s => ({ ...s, status: 'error' })));
+            setErrorMessage(err.message || 'An unexpected error occurred during the pipeline execution.');
         }
       } finally {
         if (isMounted && onComplete) {
@@ -215,6 +221,15 @@ export const PipelineDashboard: React.FC<PipelineDashboardProps> = ({ isActive, 
         <div className="pt-6 border-t border-white/10 animate-in fade-in slide-in-from-bottom-4 duration-700">
           <h3 className="text-xs font-bold text-gray-100 uppercase tracking-wider mb-4">Predicted Structure (ESMFold2)</h3>
           <MolecularViewer pdbData={pdbData} />
+        </div>
+      )}
+
+      {errorMessage && (
+        <div className="pt-6 border-t border-white/10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <h3 className="text-xs font-bold text-red-400 uppercase tracking-wider mb-2">Pipeline Error</h3>
+          <div className="bg-red-500/10 p-4 rounded-sm border border-red-500/50 text-red-400 text-sm">
+            {errorMessage}
+          </div>
         </div>
       )}
     </div>
