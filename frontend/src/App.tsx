@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-import { Microscope, GitBranch, Shield, Settings, Code } from 'lucide-react';
+import { Microscope, Shield, Code } from 'lucide-react';
 import { LandingPage } from './components/LandingPage';
 import { Generator } from './components/Generator';
 
