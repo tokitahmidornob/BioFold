@@ -1,13 +1,14 @@
 @import "tailwindcss";
 
 @theme {
-  --color-scientific-blue: #1a56db;
-  --color-scientific-teal: #0e9f6e;
-  --color-scientific-gray: #f3f4f6;
-  --color-scientific-dark: #111827;
-  --color-scientific-light: #ffffff;
+  --color-alpha-dark: #0A192F;
+  --color-alpha-bg: #F3F4F6;
+  --color-alpha-card: #FFFFFF;
+  --color-alpha-accent: #2563EB;
+  --color-alpha-success: #059669;
+  --color-alpha-border: #E5E7EB;
 }
 
 body {
-  @apply bg-gray-100 text-gray-900 antialiased;
+  @apply bg-alpha-bg text-alpha-dark antialiased;
 }

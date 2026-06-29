@@ -44,19 +44,19 @@ export const TargetConditioning: React.FC<TargetConditioningProps> = ({ onStartP
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-6">
-      <div className="flex items-center space-x-3 border-b border-gray-100 pb-4">
-        <Activity className="text-scientific-blue w-6 h-6" />
-        <h2 className="text-xl font-semibold text-scientific-dark">Target Conditioning</h2>
+    <div className="bg-alpha-card rounded-sm border border-alpha-border p-6 space-y-6">
+      <div className="flex items-center space-x-3 border-b border-alpha-border pb-4">
+        <Activity className="text-alpha-accent w-5 h-5" />
+        <h2 className="text-sm font-bold text-alpha-dark tracking-wider uppercase">Target Conditioning</h2>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="space-y-4">
-          <label className="block text-sm font-medium text-gray-700">Structural Target Upload (.pdb)</label>
+          <label className="block text-xs font-bold text-alpha-dark uppercase tracking-wider">Structural Target Upload (.pdb)</label>
           <div 
             className={cn(
-              "relative flex flex-col items-center justify-center w-full h-48 border-2 border-dashed rounded-lg transition-colors",
-              dragActive ? "border-scientific-blue bg-blue-50" : "border-gray-300 bg-gray-50 hover:bg-gray-100"
+              "relative flex flex-col items-center justify-center w-full h-48 border-2 border-dashed rounded-sm transition-colors",
+              dragActive ? "border-alpha-accent bg-alpha-accent/5" : "border-alpha-border bg-alpha-bg hover:bg-gray-200"
             )}
             onDragEnter={handleDrag}
             onDragLeave={handleDrag}
@@ -64,7 +64,7 @@ export const TargetConditioning: React.FC<TargetConditioningProps> = ({ onStartP
             onDrop={handleDrop}
           >
             {file ? (
-              <div className="flex flex-col items-center space-y-2 text-scientific-teal">
+              <div className="flex flex-col items-center space-y-2 text-alpha-accent">
                 <File className="w-10 h-10" />
                 <span className="text-sm font-medium">{file.name}</span>
                 <button onClick={() => setFile(null)} className="text-xs text-red-500 hover:underline">Remove</button>
@@ -81,9 +81,9 @@ export const TargetConditioning: React.FC<TargetConditioningProps> = ({ onStartP
         </div>
 
         <div className="space-y-4">
-          <label className="block text-sm font-medium text-gray-700">Biological Function / Prompt</label>
+          <label className="block text-xs font-bold text-alpha-dark uppercase tracking-wider">Biological Function / Prompt</label>
           <textarea 
-            className="w-full h-48 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-scientific-blue focus:border-scientific-blue outline-none resize-none"
+            className="w-full h-48 p-4 border border-alpha-border bg-alpha-bg rounded-sm focus:ring-1 focus:ring-alpha-accent focus:border-alpha-accent outline-none resize-none text-sm"
             placeholder="E.g., Design a de novo protein that binds to the SARS-CoV-2 spike protein receptor binding domain..."
             value={textTarget}
             onChange={(e) => setTextTarget(e.target.value)}
@@ -95,7 +95,7 @@ export const TargetConditioning: React.FC<TargetConditioningProps> = ({ onStartP
         <button 
           onClick={() => onStartPipeline(textTarget)}
           disabled={(!file && !textTarget) || isLoading}
-          className="bg-scientific-blue hover:bg-blue-700 text-white font-medium py-2.5 px-6 rounded-lg shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="bg-alpha-accent hover:bg-blue-700 text-white text-sm tracking-wide uppercase font-bold py-2.5 px-6 rounded-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading ? 'Initializing...' : 'Initialize Pipeline'}
         </button>

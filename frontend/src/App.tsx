@@ -9,26 +9,26 @@ function App() {
   const [targetPrompt, setTargetPrompt] = useState('');
 
   return (
-    <div className="min-h-screen flex flex-col font-sans">
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <div className="min-h-screen flex flex-col font-sans bg-alpha-bg text-alpha-dark">
+      <header className="bg-alpha-dark border-b border-alpha-border sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
-              <div className="bg-scientific-blue p-2 rounded-lg">
+              <div className="bg-alpha-accent p-2 rounded-sm">
                 <Microscope className="w-6 h-6 text-white" />
               </div>
-              <h1 className="text-xl font-bold text-gray-900 tracking-tight">Bio-LLM <span className="text-scientific-teal">Sequence Generator</span></h1>
+              <h1 className="text-xl font-bold text-white tracking-widest uppercase">Bio-LLM <span className="text-alpha-accent font-normal">Sequence Generator</span></h1>
             </div>
             <nav className="flex space-x-6">
-              <a href="#" className="text-gray-500 hover:text-scientific-blue flex items-center space-x-2 text-sm font-medium transition-colors">
+              <a href="#" className="text-gray-300 hover:text-white flex items-center space-x-2 text-xs font-semibold tracking-wider uppercase transition-colors">
                 <GitBranch className="w-4 h-4" />
                 <span>Models</span>
               </a>
-              <a href="#" className="text-gray-500 hover:text-scientific-blue flex items-center space-x-2 text-sm font-medium transition-colors">
+              <a href="#" className="text-gray-300 hover:text-white flex items-center space-x-2 text-xs font-semibold tracking-wider uppercase transition-colors">
                 <Shield className="w-4 h-4" />
                 <span>Security</span>
               </a>
-              <a href="#" className="text-gray-500 hover:text-scientific-blue flex items-center space-x-2 text-sm font-medium transition-colors">
+              <a href="#" className="text-gray-300 hover:text-white flex items-center space-x-2 text-xs font-semibold tracking-wider uppercase transition-colors">
                 <Settings className="w-4 h-4" />
                 <span>Settings</span>
               </a>
@@ -39,8 +39,8 @@ function App() {
 
       <main className="flex-1 max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10 space-y-10">
         <header className="space-y-2">
-          <h2 className="text-3xl font-bold text-gray-900">Workspace Initialization</h2>
-          <p className="text-gray-500 text-lg">Define target constraints and execute the multi-agent generation pipeline.</p>
+          <h2 className="text-3xl font-bold text-alpha-dark tracking-wide uppercase">Workspace Initialization</h2>
+          <p className="text-alpha-dark/70 text-lg">Define target constraints and execute the multi-agent generation pipeline.</p>
         </header>
 
         <section>
@@ -63,8 +63,8 @@ function App() {
         </section>
       </main>
 
-      <footer className="bg-white border-t border-gray-200 mt-auto">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center text-sm text-gray-500">
+      <footer className="bg-alpha-dark border-t border-alpha-border mt-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center text-xs tracking-wider uppercase font-medium text-gray-400">
           <p>&copy; 2026 DeepMind Antigravity Labs. All rights reserved.</p>
           <div className="flex space-x-4">
             <span>v1.0.0</span>

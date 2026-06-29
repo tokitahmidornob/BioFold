@@ -7,12 +7,13 @@ export default {
   theme: {
     extend: {
       colors: {
-        scientific: {
-          blue: '#1a56db',
-          teal: '#0e9f6e',
-          gray: '#f3f4f6',
-          dark: '#111827',
-          light: '#ffffff'
+        alpha: {
+          dark: '#0A192F',
+          bg: '#F3F4F6',
+          card: '#FFFFFF',
+          accent: '#2563EB',
+          success: '#059669',
+          border: '#E5E7EB',
         }
       },
       fontFamily: {

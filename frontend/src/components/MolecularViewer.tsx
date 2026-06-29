@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as $3Dmol from '3dmol';
+import { RefreshCw, Download } from 'lucide-react';
 
 interface MolecularViewerProps {
   pdbData?: string;
@@ -15,7 +16,7 @@ export const MolecularViewer: React.FC<MolecularViewerProps> = ({ pdbData }) => 
 
     // Initialize the viewer
     const viewer = $3Dmol.createViewer(viewerRef.current, {
-      backgroundColor: 'white'
+      backgroundColor: '#0A192F'
     });
 
     // We'll use a sample mock PDB string if none is provided
@@ -56,11 +57,11 @@ ATOM     12  O   GLU A   2      23.864  12.441  22.846  1.00 41.77           O
   }, [pdbData]);
 
   return (
-    <div className="relative w-full h-[500px] border border-gray-200 rounded-lg overflow-hidden bg-white">
+    <div className="relative w-full h-[500px] border border-alpha-border rounded-sm overflow-hidden bg-alpha-dark">
       {hasError ? (
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-500 bg-gray-50">
-          <p className="font-semibold text-lg">Preview Unavailable</p>
-          <p className="text-sm">The generated structure data could not be visualized.</p>
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-alpha-dark/50 bg-alpha-bg">
+          <p className="font-bold text-sm tracking-wide uppercase">Preview Unavailable</p>
+          <p className="text-xs">The generated structure data could not be visualized.</p>
         </div>
       ) : (
         <>
@@ -68,8 +69,18 @@ ATOM     12  O   GLU A   2      23.864  12.441  22.846  1.00 41.77           O
             ref={viewerRef} 
             className="absolute inset-0 w-full h-full"
           />
-          <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-md text-xs font-medium text-gray-700 shadow-sm border border-gray-200">
-            Interactive 3D Viewer
+          <div className="absolute top-4 left-4 right-4 flex justify-between items-center z-10">
+            <div className="bg-alpha-dark/80 backdrop-blur-sm px-3 py-1.5 rounded-sm text-xs font-bold tracking-wider uppercase text-white shadow-sm border border-white/10">
+              Interactive 3D Viewer
+            </div>
+            <div className="flex space-x-2">
+              <button className="bg-alpha-dark/80 backdrop-blur-sm p-1.5 rounded-sm border border-white/10 text-white hover:bg-white/10 transition-colors" title="Reset View">
+                <RefreshCw className="w-4 h-4" />
+              </button>
+              <button className="bg-alpha-dark/80 backdrop-blur-sm p-1.5 rounded-sm border border-white/10 text-white hover:bg-white/10 transition-colors" title="Download PDB">
+                <Download className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </>
       )}
