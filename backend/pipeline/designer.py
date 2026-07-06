@@ -28,15 +28,21 @@ def generate_sequence(prompt: str) -> dict:
     Do not include any conversational filler. Just the raw JSON object."""
 
     try:
-        response = client.text_generation(f"{system_prompt}\n\nUser Prompt: {prompt}", max_new_tokens=500)
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": prompt}
+        ]
+        # Call the conversational endpoint
+        response = client.chat_completion(messages=messages, max_tokens=500)
+        
+        # Extract the raw text from the chat response object
+        raw_text = response.choices[0].message.content
         
         # Robust Markdown Cleaning
-        cleaned_response = response.strip()
+        cleaned_response = raw_text.strip()
         if cleaned_response.startswith("```"):
-            # Remove opening code block line (e.g., ```json or ```)
             cleaned_response = cleaned_response.split("\n", 1)[1]
         if cleaned_response.endswith("```"):
-            # Remove closing code block
             cleaned_response = cleaned_response.rsplit("```", 1)[0]
         cleaned_response = cleaned_response.strip()
         
