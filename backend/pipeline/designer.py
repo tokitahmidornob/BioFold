@@ -7,27 +7,23 @@ def generate_sequence(prompt: str) -> dict:
     The Bio-Designer: Dynamically generates a protein sequence and clinical rationale via Llama-3.
     """
     normalized_prompt = prompt.lower()
+    import os
+    # Explicitly look for the environment variable populated by the Space Secret
     hf_token = os.getenv("HF_TOKEN")
-        
-    if not hf_token:
-        return {
-            "agent": "The Bio-Designer",
-            "status": "error",
-            "sequence": None,
-            "clinical_rationale": "Authentication Error: HF_TOKEN is missing.",
-            "message": "HF_TOKEN environment variable not set."
-        }
-            
-    client = InferenceClient(model="meta-llama/Meta-Llama-3-8B-Instruct", token=hf_token)
     
-    system_prompt = """You are an elite computational biologist. 
-    Based on the user's prompt, you must design a novel, biologically viable protein sequence.
-    Respond ONLY with a valid JSON object containing exactly two keys:
-    1. "sequence": A string of only valid uppercase amino acid letters. Max 200 length.
-    2. "clinical_rationale": A detailed 2-paragraph medical explanation of how this specific sequence targets the problem.
-    Do not include any conversational filler. Just the raw JSON object."""
-
+    if not hf_token:
+        # Fallback: check if hardcoded for local testing (remove before submission!)
+        return {"agent": "Bio-Designer", "status": "error", "message": "HF_TOKEN missing in environment"}
+            
     try:
+        client = InferenceClient(model="meta-llama/Meta-Llama-3-8B-Instruct", token=hf_token)
+        
+        system_prompt = """You are an elite computational biologist. 
+        Based on the user's prompt, you must design a novel, biologically viable protein sequence.
+        Respond ONLY with a valid JSON object containing exactly two keys:
+        1. "sequence": A string of only valid uppercase amino acid letters. Max 200 length.
+        2. "clinical_rationale": A detailed 2-paragraph medical explanation of how this specific sequence targets the problem.
+        Do not include any conversational filler. Just the raw JSON object."""
         messages = [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": prompt}
