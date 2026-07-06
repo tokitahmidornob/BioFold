@@ -48,13 +48,18 @@ def generate_sequence(prompt: str) -> dict:
             "status": "success",
             "sequence": ai_data.get("sequence", "").strip().upper(),
             "clinical_rationale": ai_data.get("clinical_rationale", "No rationale generated."),
+            "clinicalRationale": ai_data.get("clinical_rationale", "No rationale generated."),
+            "rationale": ai_data.get("clinical_rationale", "No rationale generated."),
             "message": "Sequence dynamically generated successfully."
         }
     except Exception as e:
+        fallback_rationale = f"Dynamic analysis execution encountered an issue: {str(e)}. Processing fallback structural profiling."
         return {
             "agent": "The Bio-Designer",
             "status": "error",
             "sequence": "MKKSRLALVLMVAVAGVVSVAQA", # Safe fallback structural sequence
-            "clinical_rationale": f"Dynamic analysis execution encountered an issue: {str(e)}. Processing fallback structural profiling.",
+            "clinical_rationale": fallback_rationale,
+            "clinicalRationale": fallback_rationale,
+            "rationale": fallback_rationale,
             "message": f"Dynamic generation failed: {str(e)}"
         }
