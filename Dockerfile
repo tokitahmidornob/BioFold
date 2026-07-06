@@ -4,6 +4,9 @@ FROM python:3.10-slim
 # Set the working directory in the container
 WORKDIR /app
 
+# Tell Python where to find the internal modules
+ENV PYTHONPATH="/app/backend"
+
 # Copy the requirements file into the container
 COPY backend/requirements.txt .
 
