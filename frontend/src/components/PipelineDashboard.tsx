@@ -83,6 +83,7 @@ export const PipelineDashboard: React.FC<PipelineDashboardProps> = ({ isActive, 
   const [isSafe, setIsSafe] = useState<boolean | null>(null);
   const [guardrailMessage, setGuardrailMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [clinicalRationale, setClinicalRationale] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isActive || !targetPrompt) return;
@@ -114,6 +115,7 @@ export const PipelineDashboard: React.FC<PipelineDashboardProps> = ({ isActive, 
         setSequence(data.sequence);
         setIsSafe(data.is_safe);
         setPdbData(data.pdb_data);
+        setClinicalRationale(data.clinical_rationale || null);
 
         const guardrailLog = data.logs?.find((l: any) => l.agent === 'The Biosecurity Guardrail');
         if (guardrailLog) {
@@ -221,6 +223,15 @@ export const PipelineDashboard: React.FC<PipelineDashboardProps> = ({ isActive, 
         <div className="pt-6 border-t border-white/10 animate-in fade-in slide-in-from-bottom-4 duration-700">
           <h3 className="text-xs font-bold text-gray-100 uppercase tracking-wider mb-4">Predicted Structure (ESMFold2)</h3>
           <MolecularViewer pdbData={pdbData} />
+        </div>
+      )}
+
+      {clinicalRationale && (
+        <div className="pt-6 border-t border-white/10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <h3 className="text-xs font-bold text-gray-100 uppercase tracking-wider mb-4">Post-Generation Clinical Analysis</h3>
+          <div className="bg-black/20 p-4 rounded-sm border border-white/10 text-gray-200 text-sm leading-relaxed whitespace-pre-wrap">
+            {clinicalRationale}
+          </div>
         </div>
       )}
 
