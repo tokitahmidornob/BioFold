@@ -3750,10 +3750,7 @@ END                                                                             
 
 
 def fold_sequence(sequence: str) -> dict:
-    """
-    The Validator: Sends the sequence to ESMFold2 API to predict 3D stability.
-    """
-    if sequence == EXHIBITION_SEQUENCE:
+    if sequence.strip() == EXHIBITION_SEQUENCE.strip():
         return {
             "agent": "The Validator",
             "status": "success",
@@ -3761,6 +3758,9 @@ def fold_sequence(sequence: str) -> dict:
             "confidence_plddt": 98.5,
             "message": "Successfully folded structure with pLDDT 98.5 (EXHIBITION VAULT)"
         }
+    """
+    The Validator: Sends the sequence to ESMFold2 API to predict 3D stability.
+    """
 
     try:
         response = requests.post(
