@@ -20,5 +20,19 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
+          # Destroy the local git history so Hugging Face doesn't see old massive files
+          rm -rf .git
+          git init
+          git checkout -b main
+          
+          # Configure bot identity
+          git config user.email "github-actions@github.com"
+          git config user.name "GitHub Actions"
+          
+          # Add current files (respecting the new .gitignore) and commit
+          git add .
+          git commit -m "Force clean deployment to Hugging Face"
+          
+          # Force push this single, clean commit to Hugging Face
           git remote add space https://tokitahmidornob:$HF_TOKEN@huggingface.co/spaces/tokitahmidornob/BioFold-Engine
           git push --force space main
