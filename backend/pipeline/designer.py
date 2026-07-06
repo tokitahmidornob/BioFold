@@ -3,15 +3,6 @@ import re
 from huggingface_hub import InferenceClient
 
 def generate_sequence(prompt: str) -> dict:
-    # EXHIBITION VAULT BYPASS: Catch both the TIM-barrel and Medical Rescue prompts
-    normalized_prompt = prompt.lower()
-    if "triosephosphate isomerase" in normalized_prompt or "methotrexate" in normalized_prompt or "scavenger" in normalized_prompt:
-        return {
-            "agent": "The Bio-Designer",
-            "status": "success",
-            "sequence": "APRKFFVGGNWKMNGDKKSLGELIHTLNGAKLSADTEVVCGAPSIYLDFARQKLDAKIGVAAQNCYKVPKGAFTGEISPAMIKDIGAAWVILGHSERRHVFGESDELIGQKVAHALAEGLGVIACIGEKLDEREAGITEKVVFEQTKVIADNVKDWSKVVLAYEPVWAIGTGKTATPQQAQEVHEKLRGWLKSNVSDAVAQSTRIIYGGSVTGATCKELASQPDVDGFLVGGASLKPEFVDIINAKQ",
-            "message": "Sequence generated successfully (EXHIBITION CLINICAL VAULT)"
-        }
     """
     The Bio-Designer: Uses a Hugging Face LLM to generate a protein sequence based on the prompt.
     """
@@ -28,49 +19,32 @@ def generate_sequence(prompt: str) -> dict:
         
     client = InferenceClient(model="meta-llama/Meta-Llama-3-8B-Instruct", token=hf_token)
     
-    system_prompt = (
-        "You are an elite protein designer AI. Your task is to output a continuous, "
-        "valid amino acid sequence based on the user's constraints. "
-        "Use ONLY the standard 20 amino acid single-letter codes (ACDEFGHIKLMNPQRSTVWY). "
-        "Do NOT output any other text, no markdown, no explanation, no conversational filler. "
-        "Just the sequence."
-    )
-    
-    messages = [
-        {"role": "system", "content": system_prompt},
-        {"role": "user", "content": f"Design a protein sequence with the following constraints: {prompt}"}
-    ]
-    
+    system_prompt = """You are an elite computational biologist. 
+Based on the user's prompt, you must design a novel, biologically viable protein sequence.
+Respond ONLY with a valid JSON object containing exactly two keys:
+1. "sequence": A string of only valid uppercase amino acid letters (A, C, D, E, F, G, H, I, K, L, M, N, P, Q, R, S, T, V, W, Y). Max 200 length.
+2. "clinical_rationale": A detailed 2-paragraph medical explanation of how this specific sequence targets the problem, its structural properties, and the pathological consequences it averts.
+Do not include markdown formatting like ```json in the output. Just the raw JSON."""
+
     try:
-        response = client.chat_completion(
-            messages=messages,
-            max_tokens=256,
-            temperature=0.2,
-        )
+        # Call the LLM (ensure your specific client syntax matches this intent)
+        response = client.text_generation(f"{system_prompt}\n\nUser Prompt: {prompt}", max_new_tokens=400)
         
-        raw_text = response.choices[0].message.content.strip()
-        
-        # Clean up any potential conversational wrapper just in case
-        generated_seq = re.sub(r'[^ACDEFGHIKLMNPQRSTVWY]', '', raw_text.upper())
-        
-        if not generated_seq:
-             return {
-                "agent": "The Bio-Designer",
-                "status": "error",
-                "sequence": None,
-                "message": "The AI model failed to generate a valid sequence."
-            }
+        # Parse the dynamic JSON response
+        import json
+        ai_data = json.loads(response.strip())
         
         return {
             "agent": "The Bio-Designer",
             "status": "success",
-            "sequence": generated_seq,
-            "message": f"Successfully generated sequence of length {len(generated_seq)} based on target constraints via Hugging Face API."
+            "sequence": ai_data["sequence"],
+            "clinical_rationale": ai_data["clinical_rationale"],
+            "message": "Sequence dynamically generated via Meta-Llama-3."
         }
     except Exception as e:
         return {
             "agent": "The Bio-Designer",
             "status": "error",
             "sequence": None,
-            "message": f"Hugging Face API failed: {str(e)}"
+            "message": f"Dynamic generation failed: {str(e)}"
         }

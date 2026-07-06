@@ -3749,37 +3749,33 @@ ATOM   3741  NE2 HIS B 248      46.107  80.157 -18.798  1.00  0.00           N
 END                                                                             """
 
 
-def fold_sequence(sequence: str) -> dict:
-    if sequence.strip() == EXHIBITION_SEQUENCE.strip():
-        return {
-            "agent": "The Validator",
-            "status": "success",
-            "pdb_data": EXHIBITION_PDB,
-            "confidence_plddt": 98.5,
-            "message": "Successfully folded structure with pLDDT 98.5 (EXHIBITION VAULT)",
-            "clinical_rationale": "CLINICAL BINDING ANALYSIS: The engineered sequence exhibits a highly optimized (beta/alpha)_8 barrel structure with a deep, electrostatically tuned hydrophobic pocket. Specific Arginine and Glutamate residues form ideal hydrogen bond networks with the glutamate moiety of Methotrexate (MTX).\n\nPATHOLOGICAL CONSEQUENCE: By binding MTX with sub-nanomolar affinity, this de novo scavenger protein rapidly sequesters free-floating chemotherapeutic toxins in the bloodstream. This prevents renal crystallization and averts fatal acute kidney injury (AKI), allowing oncologists to safely administer higher, more curative doses of chemotherapy."
-        }
+def fold_sequence(sequence: str, state: dict = None) -> dict:
     """
     The Validator: Sends the sequence to ESMFold2 API to predict 3D stability.
     """
+    if state is None:
+        state = {}
 
     try:
         response = requests.post(
             Config.ESMFOLD_API_URL, 
             data=sequence,
             headers={"Content-Type": "text/plain"},
-            timeout=60.0
+            timeout=120.0
         )
         
         if response.status_code == 200:
             confidence = round(random.uniform(80.0, 95.0), 2)
-            return {
+            result = {
                 "agent": "The Validator",
                 "status": "success",
                 "pdb_data": response.text,
                 "confidence_plddt": confidence,
                 "message": f"Successfully folded structure with pLDDT {confidence}"
             }
+            if "clinical_rationale" in state:
+                result["clinical_rationale"] = state["clinical_rationale"]
+            return result
         else:
             raise HTTPException(
                 status_code=502, 

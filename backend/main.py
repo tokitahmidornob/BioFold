@@ -31,6 +31,7 @@ class DesignResponse(BaseModel):
     pdb_data: str | None = None
     is_safe: bool = False
     logs: list[dict]
+    clinical_rationale: str | None = None
 
 @app.post("/api/v1/design-protein", response_model=DesignResponse)
 async def design_protein(request: DesignRequest):
@@ -63,7 +64,7 @@ async def design_protein(request: DesignRequest):
         
     # 3. Validator Agent
     start_time = time.time()
-    validator_res = fold_sequence(sequence)
+    validator_res = fold_sequence(sequence, designer_res)
     validator_res["elapsed_ms"] = round((time.time() - start_time) * 1000)
     logs.append(validator_res)
     
@@ -72,7 +73,8 @@ async def design_protein(request: DesignRequest):
         sequence=sequence,
         pdb_data=validator_res.get("pdb_data"),
         is_safe=True,
-        logs=logs
+        logs=logs,
+        clinical_rationale=designer_res.get("clinical_rationale")
     )
 
 if __name__ == "__main__":
