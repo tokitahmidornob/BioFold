@@ -9,10 +9,16 @@ def generate_sequence(prompt: str) -> dict:
     
     system_prompt = """You are a computational biologist.
     You MUST respond with ONLY a valid JSON object. No markdown, no conversational text.
-    Format: {"sequence": "VALID_AMINO_ACIDS", "clinical_rationale": "Your detailed explanation here."}"""
+    CRITICAL: The protein sequence MUST be realistic, highly stable, and strictly between 60 and 120 amino acids long. Do NOT repeat the same motif endlessly.
+    Format: {"sequence": "VALID_AMINO_ACIDS", "clinical_rationale": "Your detailed 2-paragraph medical explanation here."}"""
 
     try:
-        response = client.chat_completion(messages=[{"role":"system","content":system_prompt},{"role":"user","content":prompt}], max_tokens=2048)
+        # Lowering temperature to 0.1 forces deterministic, logical outputs instead of creative loops
+        response = client.chat_completion(
+            messages=[{"role":"system","content":system_prompt},{"role":"user","content":prompt}], 
+            max_tokens=1024,
+            temperature=0.1
+        )
         content = response.choices[0].message.content
         
         # Secure index mapping
