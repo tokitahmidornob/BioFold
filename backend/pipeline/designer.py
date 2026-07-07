@@ -12,7 +12,7 @@ def generate_sequence(prompt: str) -> dict:
     Format: {"sequence": "VALID_AMINO_ACIDS", "clinical_rationale": "Your detailed explanation here."}"""
 
     try:
-        response = client.chat_completion(messages=[{"role":"system","content":system_prompt},{"role":"user","content":prompt}], max_tokens=500)
+        response = client.chat_completion(messages=[{"role":"system","content":system_prompt},{"role":"user","content":prompt}], max_tokens=2048)
         content = response.choices[0].message.content
         
         # Secure index mapping
