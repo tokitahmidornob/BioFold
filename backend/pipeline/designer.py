@@ -1,7 +1,3 @@
-import os
-import re
-from huggingface_hub import InferenceClient
-
 def generate_sequence(prompt: str) -> dict:
     import os, json
     from huggingface_hub import InferenceClient
@@ -10,7 +6,7 @@ def generate_sequence(prompt: str) -> dict:
     fallback_seq = "MKKSRLALVLMVAVAGVVSVAQA"
 
     if not hf_token:
-        return {"status": "error", "message": "HF_TOKEN missing", "sequence": fallback_seq, "clinical_rationale": "Auth error."}
+        return {"status": "error", "message": "HF_TOKEN missing", "sequence": fallback_seq, "clinical_rationale": "Auth error.", "clinicalRationale": "Auth error.", "rationale": "Auth error."}
 
     # 1. Force extreme concision to avoid API truncation
     system_prompt = """You are a computational biologist. 
@@ -27,16 +23,16 @@ def generate_sequence(prompt: str) -> dict:
             max_tokens=1024,
             temperature=0.6
         )
-        
+
         content = response.choices[0].message.content.strip()
         start_idx = content.find('{')
-        
+
         if start_idx == -1:
             raise ValueError(f"No JSON found. Output: {content[:50]}...")
-            
+
         # 2. Extract and Auto-Repair Truncated JSON
         json_candidate = content[start_idx:]
-        
+
         # If the string was truncated and is missing the closing brace
         if '}' not in json_candidate:
             # Find the last quote to see where the text was severed

@@ -8,14 +8,14 @@ from pipeline.designer import generate_sequence
 from pipeline.guardrail import check_sequence
 from pipeline.validator import fold_sequence
 
+# Merge config CORS origins with the production Vercel origin
+_CORS_ORIGINS = list(set(Config.CORS_ORIGINS + ["https://bio-fold.vercel.app", "http://localhost:5173"]))
+
 app = FastAPI(title="Bio-LLM Swarm API", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://bio-fold.vercel.app", 
-        "http://localhost:5173"
-    ],
+    allow_origins=_CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -64,10 +64,20 @@ async def design_protein(request: DesignRequest):
         
     # 3. Validator Agent
     start_time = time.time()
-    validator_res = fold_sequence(sequence, designer_res)
+    try:
+        validator_res = fold_sequence(sequence, designer_res)
+    except HTTPException as e:
+        # ESMFold is down or timed out — return a graceful partial result
+        # so the frontend still displays the sequence and rationale.
+        validator_res = {
+            "agent": "The Validator",
+            "status": "error",
+            "pdb_data": None,
+            "message": f"Folding engine unavailable: {e.detail}"
+        }
     validator_res["elapsed_ms"] = round((time.time() - start_time) * 1000)
     logs.append(validator_res)
-    
+
     return DesignResponse(
         status="success",
         sequence=sequence,
