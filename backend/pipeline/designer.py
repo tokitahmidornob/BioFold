@@ -1,5 +1,5 @@
 def generate_sequence(prompt: str) -> dict:
-    import os, json
+    import os, json, re
     from huggingface_hub import InferenceClient
 
     hf_token = os.getenv("HF_TOKEN")
@@ -29,6 +29,7 @@ def generate_sequence(prompt: str) -> dict:
     4. THERMODYNAMIC CONSTRAINT: Circulating plasma proteins MUST be water-soluble. Never describe "surface-exposed hydrophobic residues." Hydrophobic interactions MUST be "internally facing."
     5. {dynamic_constraint}
     6. The sequence MUST be 60-100 amino acids.
+    7. SYNTAX RULE: Do NOT use double quotes (") inside the text of the clinical_rationale. Use single quotes (') only.
     Format: {{"clinical_rationale": "...", "sequence": "..."}}"""
 
     try:
@@ -40,31 +41,34 @@ def generate_sequence(prompt: str) -> dict:
         )
 
         content = response.choices[0].message.content.strip()
-        start_idx = content.find('{')
 
-        if start_idx == -1:
-            raise ValueError(f"No JSON found. Output: {content[:50]}...")
+        def parse_llm_response(raw_response):
+            # Strip markdown formatting if the LLM added it
+            clean_text = raw_response.replace("```json", "").replace("```", "").strip()
+            
+            try:
+                # Attempt Standard Parse
+                return json.loads(clean_text)
+            except Exception as e:
+                print(f"JSON Parse Error. Initiating Auto-Repair: {e}")
+                # Regex Failsafe Extraction
+                try:
+                    # Extract sequence (look for "sequence": "AMINOACIDS")
+                    seq_match = re.search(r'"sequence"\s*:\s*"([^"]+)"', clean_text, re.IGNORECASE)
+                    sequence = seq_match.group(1).strip() if seq_match else ""
+                    
+                    # Extract rationale (look for everything between "clinical_rationale": " and ", "sequence")
+                    rat_match = re.search(r'"clinical_rationale"\s*:\s*"(.*?)"\s*,?\s*"sequence"', clean_text, re.DOTALL | re.IGNORECASE)
+                    rationale = rat_match.group(1).strip() if rat_match else "Rationale partially corrupted during generation, but sequence salvaged successfully."
+                    
+                    return {
+                        "clinical_rationale": rationale,
+                        "sequence": sequence
+                    }
+                except Exception as regex_e:
+                    raise ValueError(f"Auto-Repair failed to salvage sequence. Raw Output: {clean_text}")
 
-        # 2. Extract and Auto-Repair Truncated JSON
-        json_candidate = content[start_idx:]
-
-        # If the string was truncated and is missing the closing brace
-        if '}' not in json_candidate:
-            # Find the last quote to see where the text was severed
-            last_quote = json_candidate.rfind('"')
-            if last_quote != -1:
-                # Forcibly close the rationale and inject a fallback sequence to save the run
-                json_candidate = json_candidate[:last_quote] + '", "sequence": "' + fallback_seq + '"}'
-            else:
-                json_candidate += '}'
-
-        # Locate the final brace (whether natural or repaired)
-        end_idx = json_candidate.rfind('}')
-        clean_json = json_candidate[:end_idx + 1]
-
-        # Flatten unescaped newlines that crash standard JSON decoders
-        clean_json = clean_json.replace('\n', ' ').replace('\r', '')
-        ai_data = json.loads(clean_json, strict=False)
+        ai_data = parse_llm_response(content)
 
         return {
             "status": "success",
