@@ -12,9 +12,10 @@ def generate_sequence(prompt: str) -> dict:
     system_prompt = """You are a computational biologist designing a de novo protein.
     CRITICAL RULES:
     1. Respond with ONLY valid JSON.
-    2. The clinical_rationale MUST be a 3-paragraph scientific analysis explaining the structural stability of the TIM-barrel and the specific binding mechanism (hydrophobic, electrostatic, or steric). Limit to ~150 words.
+    2. The clinical_rationale MUST be a 3-paragraph scientific analysis explaining the structural stability of the TIM-barrel and the specific binding mechanism. Limit to ~150 words.
     3. ANTI-HALLUCINATION PROTOCOL: You MUST adapt the binding mechanism to the EXACT true chemical structure of the target molecule. Do NOT invent functional groups (e.g., do not claim electrostatic bonds for neutral, nitrogen-free steroids like Digoxin). 
-    4. The sequence MUST be 60-100 amino acids.
+    4. THERMODYNAMIC CONSTRAINT: Circulating plasma proteins MUST be water-soluble. You must NEVER describe "surface-exposed hydrophobic residues." Hydrophobic interactions MUST be strictly defined as "internally facing," "core-lining," or "recessed within the binding pocket."
+    5. The sequence MUST be 60-100 amino acids.
     Format: {"clinical_rationale": "Your detailed scientific analysis here...", "sequence": "AMINOACIDS"}"""
 
     try:
