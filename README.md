@@ -6,7 +6,7 @@ colorTo: indigo
 sdk: docker
 pinned: false
 ---
-# BioFOld: Multi-Agent LLM Protein Sequence Generator
+# BioFold: Multi-Agent LLM Protein Sequence Generator
 
 *Attributed to the **H.O.L.M.E.S. (Home for Observation, Logic, Mastery, Engineering, and Science)** Initiative.*
 
