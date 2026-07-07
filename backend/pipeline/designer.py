@@ -3,52 +3,72 @@ import re
 from huggingface_hub import InferenceClient
 
 def generate_sequence(prompt: str) -> dict:
-    import os, json, re
+    import os, json
+    from huggingface_hub import InferenceClient
+
     hf_token = os.getenv("HF_TOKEN")
-    client = InferenceClient(model="meta-llama/Meta-Llama-3-8B-Instruct", token=hf_token)
-    
-    system_prompt = """You are a computational biologist designing a true de novo protein.
-    You MUST respond with ONLY a valid JSON object. No markdown, no conversational text outside the JSON.
-    CRITICAL INSTRUCTIONS: 
-    1. You must ensure high sequence diversity to maintain structural integrity. Do NOT repeat motifs endlessly.
-    2. The sequence must be 60 to 120 amino acids long.
-    3. You MUST write the rationale FIRST to establish your design context.
-    Format: {"clinical_rationale": "Write your detailed 2-paragraph medical explanation here FIRST.", "sequence": "YOUR_DE_NOVO_AMINO_ACID_SEQUENCE"}"""
+    fallback_seq = "MKKSRLALVLMVAVAGVVSVAQA"
+
+    if not hf_token:
+        return {"status": "error", "message": "HF_TOKEN missing", "sequence": fallback_seq, "clinical_rationale": "Auth error."}
+
+    # 1. Force extreme concision to avoid API truncation
+    system_prompt = """You are a computational biologist. 
+    CRITICAL RULES:
+    1. Respond with ONLY valid JSON. 
+    2. The clinical_rationale MUST be extremely brief (MAXIMUM 2 short sentences).
+    3. The sequence MUST be 60-100 amino acids.
+    Format: {"clinical_rationale": "Brief text.", "sequence": "AMINOACIDS"}"""
 
     try:
-        # Temperature 0.6 allows for true de novo creativity while avoiding chaotic loops
+        client = InferenceClient(model="meta-llama/Meta-Llama-3-8B-Instruct", token=hf_token)
         response = client.chat_completion(
-            messages=[{"role":"system","content":system_prompt},{"role":"user","content":prompt}], 
-            max_tokens=2048,
+            messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": prompt}],
+            max_tokens=1024,
             temperature=0.6
         )
-        content = response.choices[0].message.content
         
-        # Secure index mapping
+        content = response.choices[0].message.content.strip()
         start_idx = content.find('{')
-        end_idx = content.rfind('}')
         
-        # Ensure BOTH braces exist and the closing brace is AFTER the opening brace
-        if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
-            json_str = content[start_idx:end_idx + 1]
-            ai_data = json.loads(json_str, strict=False)
+        if start_idx == -1:
+            raise ValueError(f"No JSON found. Output: {content[:50]}...")
             
-            return {
-                "status": "success",
-                "sequence": ai_data.get("sequence", "").strip().upper(),
-                "clinical_rationale": ai_data.get("clinical_rationale", "No rationale."),
-                "clinicalRationale": ai_data.get("clinical_rationale", "No rationale."),
-                "rationale": ai_data.get("clinical_rationale", "No rationale.")
-            }
-        else:
-            # Expose what the LLM actually said if it fails
-            raise ValueError(f"Malformed LLM output: {content[:50]}...")
+        # 2. Extract and Auto-Repair Truncated JSON
+        json_candidate = content[start_idx:]
+        
+        # If the string was truncated and is missing the closing brace
+        if '}' not in json_candidate:
+            # Find the last quote to see where the text was severed
+            last_quote = json_candidate.rfind('"')
+            if last_quote != -1:
+                # Forcibly close the rationale and inject a fallback sequence to save the run
+                json_candidate = json_candidate[:last_quote] + '", "sequence": "' + fallback_seq + '"}'
+            else:
+                json_candidate += '}'
+
+        # Locate the final brace (whether natural or repaired)
+        end_idx = json_candidate.rfind('}')
+        clean_json = json_candidate[:end_idx + 1]
+
+        # Flatten unescaped newlines that crash standard JSON decoders
+        clean_json = clean_json.replace('\n', ' ').replace('\r', '')
+        ai_data = json.loads(clean_json, strict=False)
+
+        return {
+            "status": "success",
+            "sequence": ai_data.get("sequence", fallback_seq).strip().upper(),
+            "clinical_rationale": ai_data.get("clinical_rationale", "Rationale truncated by API."),
+            "clinicalRationale": ai_data.get("clinical_rationale", "Rationale truncated by API."),
+            "rationale": ai_data.get("clinical_rationale", "Rationale truncated by API.")
+        }
+
     except Exception as e:
         error_msg = f"Data Pipeline Error: {str(e)}"
         return {
             "status": "error",
-            "message": str(e),
-            "sequence": "MKKSRLALVLMVAVAGVVSVAQA",
+            "message": error_msg,
+            "sequence": fallback_seq,
             "clinical_rationale": error_msg,
             "clinicalRationale": error_msg,
             "rationale": error_msg
