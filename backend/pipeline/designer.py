@@ -19,7 +19,7 @@ def generate_sequence(prompt: str) -> dict:
         
         if start_idx != -1 and end_idx != -1:
             json_str = content[start_idx:end_idx]
-            ai_data = json.loads(json_str)
+            ai_data = json.loads(json_str, strict=False)
             
             return {
                 "status": "success",
@@ -31,4 +31,12 @@ def generate_sequence(prompt: str) -> dict:
         else:
             raise ValueError("No JSON block found in response.")
     except Exception as e:
-        return {"status": "error", "message": str(e), "sequence": "MKKSRLALVLMVAVAGVVSVAQA", "clinical_rationale": "Fallback triggered."}
+        error_msg = f"Data Pipeline Error: {str(e)}"
+        return {
+            "status": "error",
+            "message": str(e),
+            "sequence": "MKKSRLALVLMVAVAGVVSVAQA", 
+            "clinical_rationale": error_msg,
+            "clinicalRationale": error_msg,
+            "rationale": error_msg
+        }
