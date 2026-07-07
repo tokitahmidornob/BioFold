@@ -7,17 +7,20 @@ def generate_sequence(prompt: str) -> dict:
     hf_token = os.getenv("HF_TOKEN")
     client = InferenceClient(model="meta-llama/Meta-Llama-3-8B-Instruct", token=hf_token)
     
-    system_prompt = """You are a computational biologist.
-    You MUST respond with ONLY a valid JSON object. No markdown, no conversational text.
-    CRITICAL: The protein sequence MUST be realistic, highly stable, and strictly between 60 and 120 amino acids long. Do NOT repeat the same motif endlessly.
-    Format: {"sequence": "VALID_AMINO_ACIDS", "clinical_rationale": "Your detailed 2-paragraph medical explanation here."}"""
+    system_prompt = """You are a computational biologist designing a true de novo protein.
+    You MUST respond with ONLY a valid JSON object. No markdown, no conversational text outside the JSON.
+    CRITICAL INSTRUCTIONS: 
+    1. You must ensure high sequence diversity to maintain structural integrity. Do NOT repeat motifs endlessly.
+    2. The sequence must be 60 to 120 amino acids long.
+    3. You MUST write the rationale FIRST to establish your design context.
+    Format: {"clinical_rationale": "Write your detailed 2-paragraph medical explanation here FIRST.", "sequence": "YOUR_DE_NOVO_AMINO_ACID_SEQUENCE"}"""
 
     try:
-        # Lowering temperature to 0.1 forces deterministic, logical outputs instead of creative loops
+        # Temperature 0.6 allows for true de novo creativity while avoiding chaotic loops
         response = client.chat_completion(
             messages=[{"role":"system","content":system_prompt},{"role":"user","content":prompt}], 
-            max_tokens=1024,
-            temperature=0.1
+            max_tokens=2048,
+            temperature=0.6
         )
         content = response.choices[0].message.content
         
