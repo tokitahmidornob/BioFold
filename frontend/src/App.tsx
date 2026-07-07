@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { Microscope, Shield, Code } from 'lucide-react';
-import { LandingPage } from './components/LandingPage';
+import LandingPage from './pages/LandingPage';
 import { Generator } from './components/Generator';
 
 function App() {
@@ -39,7 +39,7 @@ function App() {
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col">
           <Routes>
-            <Route path="/" element={<LandingPage />} />
+            <Route path="/" element={<LandingPage onStartPipeline={() => window.location.href='/generate'} />} />
             <Route path="/generate" element={<Generator />} />
           </Routes>
         </div>
