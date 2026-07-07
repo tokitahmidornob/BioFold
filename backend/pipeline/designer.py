@@ -8,15 +8,28 @@ def generate_sequence(prompt: str) -> dict:
     if not hf_token:
         return {"status": "error", "message": "HF_TOKEN missing", "sequence": fallback_seq, "clinical_rationale": "Auth error.", "clinicalRationale": "Auth error.", "rationale": "Auth error."}
 
+    target_molecule = prompt
+
+    # Dynamic Chemical Ground-Truth Injector
+    CHEM_KNOWLEDGE_BASE = {
+        "digoxin": "CRITICAL CHEMICAL FACT: Digoxin (C41H64O14) is a neutral steroid glycoside. It contains ZERO nitrogen atoms and ZERO electrical charge. You MUST strictly use hydrophobic and steric interactions. The words 'electrostatic', 'nitrogen', and 'charge' are STRICTLY BANNED from the rationale.",
+        "fentanyl": "CRITICAL CHEMICAL FACT: Fentanyl contains a tertiary amine. Electrostatic interactions with negatively charged residues are highly encouraged."
+    }
+    
+    # Fetch specific constraints, default to an empty string if unknown
+    target_lower = target_molecule.lower()
+    dynamic_constraint = CHEM_KNOWLEDGE_BASE.get(target_lower, "")
+
     # 1. Force extreme concision to avoid API truncation
-    system_prompt = """You are a computational biologist designing a de novo protein.
+    system_prompt = f"""You are a computational biologist designing a de novo protein.
     CRITICAL RULES:
     1. Respond with ONLY valid JSON.
     2. The clinical_rationale MUST be a 3-paragraph scientific analysis explaining the structural stability of the TIM-barrel and the specific binding mechanism. Limit to ~150 words.
-    3. ANTI-HALLUCINATION PROTOCOL: You MUST adapt the binding mechanism to the EXACT true chemical structure of the target molecule. Do NOT invent functional groups (e.g., do not claim electrostatic bonds for neutral, nitrogen-free steroids like Digoxin). 
-    4. THERMODYNAMIC CONSTRAINT: Circulating plasma proteins MUST be water-soluble. You must NEVER describe "surface-exposed hydrophobic residues." Hydrophobic interactions MUST be strictly defined as "internally facing," "core-lining," or "recessed within the binding pocket."
-    5. The sequence MUST be 60-100 amino acids.
-    Format: {"clinical_rationale": "Your detailed scientific analysis here...", "sequence": "AMINOACIDS"}"""
+    3. ANTI-HALLUCINATION PROTOCOL: Adapt the binding mechanism to the EXACT true chemical structure of the target molecule. 
+    4. THERMODYNAMIC CONSTRAINT: Circulating plasma proteins MUST be water-soluble. Never describe "surface-exposed hydrophobic residues." Hydrophobic interactions MUST be "internally facing."
+    5. {dynamic_constraint}
+    6. The sequence MUST be 60-100 amino acids.
+    Format: {{"clinical_rationale": "...", "sequence": "..."}}"""
 
     try:
         client = InferenceClient(model="meta-llama/Meta-Llama-3-8B-Instruct", token=hf_token)
