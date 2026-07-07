@@ -9,12 +9,12 @@ def generate_sequence(prompt: str) -> dict:
         return {"status": "error", "message": "HF_TOKEN missing", "sequence": fallback_seq, "clinical_rationale": "Auth error.", "clinicalRationale": "Auth error.", "rationale": "Auth error."}
 
     # 1. Force extreme concision to avoid API truncation
-    system_prompt = """You are a computational biologist. 
+    system_prompt = """You are a computational biologist designing a de novo protein.
     CRITICAL RULES:
-    1. Respond with ONLY valid JSON. 
-    2. The clinical_rationale MUST be extremely brief (MAXIMUM 2 short sentences).
+    1. Respond with ONLY valid JSON.
+    2. The clinical_rationale MUST be a comprehensive, 3-paragraph scientific analysis explaining the structural stability of the TIM-barrel and the specific electrostatic binding mechanism for the target molecule. Limit to ~150 words to ensure rapid API processing.
     3. The sequence MUST be 60-100 amino acids.
-    Format: {"clinical_rationale": "Brief text.", "sequence": "AMINOACIDS"}"""
+    Format: {"clinical_rationale": "Your detailed scientific analysis here...", "sequence": "AMINOACIDS"}"""
 
     try:
         client = InferenceClient(model="meta-llama/Meta-Llama-3-8B-Instruct", token=hf_token)
