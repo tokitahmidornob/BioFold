@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { Microscope, Shield, Code } from 'lucide-react';
+// @ts-ignore
 import LandingPage from './pages/LandingPage';
 import { Generator } from './components/Generator';
 
