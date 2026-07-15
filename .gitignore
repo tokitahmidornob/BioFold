@@ -6,3 +6,5 @@ env/
 # Python Cache
 __pycache__/
 *.pyc
+Submissions/*.pdf
+node_modules/
