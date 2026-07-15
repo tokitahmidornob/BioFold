@@ -33,7 +33,7 @@ def generate_sequence(prompt: str) -> dict:
     Format: {{"clinical_rationale": "...", "sequence": "..."}}"""
 
     try:
-        client = InferenceClient(model="meta-llama/Meta-Llama-3.1-8B-Instruct", token=hf_token)
+        client = InferenceClient(model="meta-llama/Llama-3.1-8B-Instruct", token=hf_token)
         response = client.chat_completion(
             messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": prompt}],
             max_tokens=1024,
