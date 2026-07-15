@@ -21,6 +21,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/")
+def health_check():
+    return {"status": "ok", "message": "BioFold Engine is running"}
+
 class DesignRequest(BaseModel):
     target_prompt: str = Field(..., min_length=1, max_length=1000)
     target_pdb: str | None = None
