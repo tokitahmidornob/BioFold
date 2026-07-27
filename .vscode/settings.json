@@ -1,6 +1,6 @@
 {
   "css.lint.unknownAtRules": "ignore",
-  "python.defaultInterpreterPath": "/tmp/venv_linux/bin/python",
+  "python.defaultInterpreterPath": "${workspaceFolder}/venv_linux/bin/python",
   "python.analysis.extraPaths": [
     "${workspaceFolder}/backend"
   ]
