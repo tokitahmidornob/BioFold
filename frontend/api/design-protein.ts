@@ -15,7 +15,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // 2. Server-Side Execution Check: Route the API request entirely through this secure backend endpoint.
     // 3. Authentication Injection: explicit Authorization Bearer token using standard Node syntax.
-    const response = await fetch('https://tokitahmidornob-biofold-engine.hf.space/api/v1/design-protein', {
+    const response = await fetch(`https://tokitahmidornob-biofold-engine.hf.space/api/v1/design-protein`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
