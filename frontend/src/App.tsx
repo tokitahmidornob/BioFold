@@ -20,7 +20,7 @@ function App() {
                   BioFOld
                 </h1>
               </Link>
-              
+
               <nav className="flex space-x-6 items-center">
                 <Link to="/" className="text-gray-300 hover:text-white flex items-center space-x-2 text-xs font-bold tracking-wider uppercase transition-colors">
                   <span>Home</span>
@@ -28,7 +28,7 @@ function App() {
                 <a href="#" className="text-gray-300 hover:text-white flex items-center space-x-2 text-xs font-bold tracking-wider uppercase transition-colors">
                   <span>About</span>
                 </a>
-                <a href="https://github.com/holmes-initiative/biofold" target="_blank" rel="noopener noreferrer" className="bg-white/10 hover:bg-white/20 text-white p-1.5 rounded-sm transition-colors border border-white/10 flex items-center space-x-2">
+                <a href="https://github.com/tokitahmidornob/BioFold" target="_blank" rel="noopener noreferrer" className="bg-white/10 hover:bg-white/20 text-white p-1.5 rounded-sm transition-colors border border-white/10 flex items-center space-x-2">
                   <Code className="w-4 h-4" />
                   <span className="text-xs font-bold tracking-wider uppercase px-1">GitHub</span>
                 </a>
@@ -40,7 +40,7 @@ function App() {
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col">
           <Routes>
-            <Route path="/" element={<LandingPage onStartPipeline={() => window.location.href='/generate'} />} />
+            <Route path="/" element={<LandingPage onStartPipeline={() => window.location.href = '/generate'} />} />
             <Route path="/generate" element={<Generator />} />
           </Routes>
         </div>
@@ -53,7 +53,7 @@ function App() {
               <p className="text-gray-500 max-w-xl">Disclaimer: This tool is for research purposes only. Generated sequences must be validated in vitro before any practical application.</p>
             </div>
             <div className="flex space-x-6">
-              <span className="flex items-center space-x-1"><Shield className="w-3 h-3"/> <span>Biosecurity Active</span></span>
+              <span className="flex items-center space-x-1"><Shield className="w-3 h-3" /> <span>Biosecurity Active</span></span>
               <span>v2.0.0</span>
               <span className="text-alpha-success">Status: Operational</span>
             </div>
