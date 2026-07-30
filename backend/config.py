@@ -1,13 +1,14 @@
 import os
 
 class Config:
-    # Swarm API Keys (Mock for Demo)
-    HF_API_KEY = os.getenv("HF_API_KEY", "hf_mock_key_123456789")
-    
-    # Validation Service
+    # HF Inference API token is consumed directly in pipeline/designer.py
+    # via os.getenv("HF_TOKEN"). It must be set as a Space secret — no
+    # hardcoded defaults. A missing token now raises a RuntimeError.
+
+    # Validation Service (public, no auth required)
     ESMFOLD_API_URL = "https://api.esmatlas.com/foldSequence/v1/pdb/"
-    
-    # CORS Origins (Allow frontend dev server)
+
+    # CORS Origins (Allow frontend dev server and production)
     CORS_ORIGINS = [
         "http://localhost:5173",
         "http://127.0.0.1:5173",

@@ -112,6 +112,11 @@ export const PipelineDashboard: React.FC<PipelineDashboardProps> = ({ isActive, 
            throw new Error(data.detail || 'API request failed');
         }
 
+        // Guard: catch backend-level errors returned inside a 200 OK envelope
+        if (data.status === 'error') {
+          throw new Error(data.detail || data.message || 'Pipeline agent reported an internal error.');
+        }
+
         setSequence(data.sequence);
         setIsSafe(data.is_safe);
         setPdbData(data.pdb_data);

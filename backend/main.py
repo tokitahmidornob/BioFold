@@ -43,10 +43,23 @@ async def design_protein(request: DesignRequest):
     
     # 1. Bio-Designer Agent
     start_time = time.time()
-    designer_res = generate_sequence(request.target_prompt)
+    try:
+        designer_res = generate_sequence(request.target_prompt)
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Bio-Designer Agent failed: {str(e)}"
+        )
     designer_res["elapsed_ms"] = round((time.time() - start_time) * 1000)
     logs.append(designer_res)
-    
+
+    # Guard: treat any non-success status as a hard failure
+    if designer_res.get("status") != "success":
+        raise HTTPException(
+            status_code=500,
+            detail=f"Bio-Designer Agent error: {designer_res.get('message', 'Unknown failure')}"
+        )
+
     sequence = designer_res.get("sequence")
     if not sequence:
         raise HTTPException(status_code=500, detail="Sequence generation failed.")

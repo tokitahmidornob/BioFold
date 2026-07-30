@@ -3,10 +3,12 @@ def generate_sequence(prompt: str) -> dict:
     from huggingface_hub import InferenceClient
 
     hf_token = os.getenv("HF_TOKEN")
-    fallback_seq = "MKKSRLALVLMVAVAGVVSVAQA"
 
     if not hf_token:
-        return {"status": "error", "message": "HF_TOKEN missing", "sequence": fallback_seq, "clinical_rationale": "Auth error.", "clinicalRationale": "Auth error.", "rationale": "Auth error."}
+        raise RuntimeError(
+            "HF_TOKEN is not configured in this Space's environment secrets. "
+            "Go to Space Settings → Variables and secrets → add HF_TOKEN."
+        )
 
     target_molecule = prompt
 
@@ -70,21 +72,19 @@ def generate_sequence(prompt: str) -> dict:
 
         ai_data = parse_llm_response(content)
 
+        sequence = ai_data.get("sequence", "").strip().upper()
+        if not sequence:
+            raise ValueError("LLM returned an empty sequence. Cannot continue.")
+
         return {
             "status": "success",
-            "sequence": ai_data.get("sequence", fallback_seq).strip().upper(),
+            "sequence": sequence,
             "clinical_rationale": ai_data.get("clinical_rationale", "Rationale truncated by API."),
             "clinicalRationale": ai_data.get("clinical_rationale", "Rationale truncated by API."),
             "rationale": ai_data.get("clinical_rationale", "Rationale truncated by API.")
         }
 
     except Exception as e:
-        error_msg = f"Data Pipeline Error: {str(e)}"
-        return {
-            "status": "error",
-            "message": error_msg,
-            "sequence": fallback_seq,
-            "clinical_rationale": error_msg,
-            "clinicalRationale": error_msg,
-            "rationale": error_msg
-        }
+        # Re-raise so main.py catches it and returns a proper HTTP 500.
+        # Never silently swallow inference errors into a fake success payload.
+        raise RuntimeError(f"Bio-Designer inference failure: {str(e)}") from e
