@@ -46,30 +46,27 @@ def generate_sequence(prompt: str) -> dict:
 
         def parse_llm_response(raw_response):
             print(f"RAW LLM OUTPUT: {raw_response}")
-            # Strip markdown formatting if the LLM added it
-            clean_text = raw_response.replace("```json", "").replace("```", "").strip()
             
-            try:
-                # Attempt Standard Parse
-                return json.loads(clean_text)
-            except Exception as e:
-                print(f"JSON Parse Error. Initiating Auto-Repair: {e}")
-                # Regex Failsafe Extraction
-                try:
-                    # Extract sequence (look for "sequence": "AMINOACIDS")
-                    seq_match = re.search(r'"sequence"\s*:\s*"([^"]+)"', clean_text, re.IGNORECASE)
-                    sequence = seq_match.group(1).strip() if seq_match else ""
-                    
-                    # Extract rationale (look for everything between "clinical_rationale": " and ", "sequence")
-                    rat_match = re.search(r'"clinical_rationale"\s*:\s*"(.*?)"\s*,?\s*"sequence"', clean_text, re.DOTALL | re.IGNORECASE)
-                    rationale = rat_match.group(1).strip() if rat_match else "Rationale partially corrupted during generation, but sequence salvaged successfully."
-                    
-                    return {
-                        "clinical_rationale": rationale,
-                        "sequence": sequence
-                    }
-                except Exception as regex_e:
-                    raise ValueError(f"Auto-Repair failed to salvage sequence. Raw Output: {clean_text}")
+            # Regex Extraction: longest continuous string of valid uppercase amino acid characters
+            # Valid: A, C, D, E, F, G, H, I, K, L, M, N, P, Q, R, S, T, V, W, Y
+            matches = re.findall(r'[ACDEFGHIKLMNPQRSTVWY]+', raw_response.upper())
+            
+            if not matches:
+                raise ValueError('LLM failed to generate a valid sequence.')
+                
+            sequence = max(matches, key=len)
+            
+            if len(sequence) < 20:
+                raise ValueError('LLM failed to generate a valid sequence.')
+                
+            # Extract rationale (look for everything between "clinical_rationale": " and ")
+            rat_match = re.search(r'"clinical_rationale"\s*:\s*"(.*?)"', raw_response, re.DOTALL | re.IGNORECASE)
+            rationale = rat_match.group(1).strip() if rat_match else "Rationale extracted during robust regex sequence parsing."
+            
+            return {
+                "clinical_rationale": rationale,
+                "sequence": sequence
+            }
 
         ai_data = parse_llm_response(content)
 
