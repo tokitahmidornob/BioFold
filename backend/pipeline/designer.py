@@ -25,7 +25,7 @@ def generate_sequence(prompt: str) -> dict:
     # 1. Force extreme concision to avoid API truncation
     system_prompt = f"""You are a computational biologist designing a de novo protein.
     CRITICAL RULES:
-    1. Respond with ONLY valid JSON.
+    1. Respond with ONLY valid JSON. Return ONLY the JSON object, with no markdown, no explanation, and no formatting.
     2. The clinical_rationale MUST be a 3-paragraph scientific analysis explaining the structural stability of the TIM-barrel and the specific binding mechanism. Limit to ~150 words.
     3. ANTI-HALLUCINATION PROTOCOL: Adapt the binding mechanism to the EXACT true chemical structure of the target molecule. 
     4. THERMODYNAMIC CONSTRAINT: Circulating plasma proteins MUST be water-soluble. Never describe "surface-exposed hydrophobic residues." Hydrophobic interactions MUST be "internally facing."
@@ -45,6 +45,7 @@ def generate_sequence(prompt: str) -> dict:
         content = response.choices[0].message.content.strip()
 
         def parse_llm_response(raw_response):
+            print(f"RAW LLM OUTPUT: {raw_response}")
             # Strip markdown formatting if the LLM added it
             clean_text = raw_response.replace("```json", "").replace("```", "").strip()
             
