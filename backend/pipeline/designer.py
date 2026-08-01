@@ -39,7 +39,8 @@ def generate_sequence(prompt: str) -> dict:
         response = client.chat_completion(
             messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": prompt}],
             max_tokens=2048,
-            temperature=0.6
+            temperature=0.7,
+            frequency_penalty=1.2
         )
 
         content = response.choices[0].message.content.strip()
