@@ -65,7 +65,7 @@ export const ProteinViewer: React.FC<ProteinViewerProps> = ({ pdbString }) => {
       </h3>
       <div 
         ref={viewerRef} 
-        style={{ height: '350px', width: '100%', position: 'relative' }}
+        style={{ height: '300px', width: '100%', position: 'relative' }}
       />
     </div>
   );
