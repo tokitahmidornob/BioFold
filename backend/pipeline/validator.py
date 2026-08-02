@@ -3753,17 +3753,28 @@ def fold_sequence(sequence: str, state: dict = None) -> dict:
     """
     The Validator: Uses local folded sequence (EXHIBITION_PDB) to predict 3D stability.
     """
-    if state is None:
-        state = {}
+    try:
+        if state is None:
+            state = {}
 
-    confidence = round(random.uniform(80.0, 95.0), 2)
-    result = {
-        "agent": "The Validator",
-        "status": "success",
-        "pdb_data": EXHIBITION_PDB,
-        "confidence_plddt": confidence,
-        "message": f"Successfully folded structure locally with pLDDT {confidence}"
-    }
-    if "clinical_rationale" in state:
-        result["clinical_rationale"] = state["clinical_rationale"]
-    return result
+        confidence = round(random.uniform(80.0, 95.0), 2)
+        result = {
+            "agent": "The Validator",
+            "status": "success",
+            "pdb_data": EXHIBITION_PDB,
+            "confidence_plddt": confidence,
+            "message": f"Successfully folded structure locally with pLDDT {confidence}"
+        }
+        if "clinical_rationale" in state:
+            result["clinical_rationale"] = state["clinical_rationale"]
+        return result
+    except Exception as e:
+        import traceback
+        print("Error during folding:")
+        traceback.print_exc()
+        return {
+            "agent": "The Validator",
+            "status": "error",
+            "pdb_data": None,
+            "message": f"Internal folding error: {str(e)}"
+        }

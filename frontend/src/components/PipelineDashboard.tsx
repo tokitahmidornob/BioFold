@@ -98,12 +98,18 @@ export const PipelineDashboard: React.FC<PipelineDashboardProps> = ({ isActive, 
         { ...prev[2], status: 'pending' },
       ]);
 
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000);
+
       try {
         const response = await fetch('/api/design-protein', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ target_prompt: targetPrompt })
+          body: JSON.stringify({ target_prompt: targetPrompt }),
+          signal: controller.signal
         });
+        
+        clearTimeout(timeoutId);
         
         const data = await response.json();
         
@@ -147,7 +153,11 @@ export const PipelineDashboard: React.FC<PipelineDashboardProps> = ({ isActive, 
         console.error(err);
         if (isMounted) {
             setStages(prev => prev.map(s => ({ ...s, status: 'error' })));
-            setErrorMessage(err.message || 'An unexpected error occurred during the pipeline execution.');
+            if (err.name === 'AbortError') {
+              setErrorMessage('The request timed out after 30 seconds. Please try again.');
+            } else {
+              setErrorMessage(err.message || 'An unexpected error occurred during the pipeline execution.');
+            }
         }
       } finally {
         if (isMounted && onComplete) {
