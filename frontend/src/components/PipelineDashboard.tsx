@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Loader2, ShieldCheck, Dna, Cuboid } from 'lucide-react';
 import { MolecularViewer } from './MolecularViewer';
+import { ProteinViewer } from './ProteinViewer';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -212,6 +213,12 @@ export const PipelineDashboard: React.FC<PipelineDashboardProps> = ({ isActive, 
            <div className="bg-black/20 p-4 rounded-sm break-all font-mono text-sm text-gray-100 border border-white/10">
              {sequence}
            </div>
+        </div>
+      )}
+
+      {pdbData && (
+        <div className="pt-6 border-t border-white/10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <ProteinViewer pdbString={pdbData} />
         </div>
       )}
 
